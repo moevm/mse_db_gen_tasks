@@ -5,8 +5,8 @@ class IDbGen:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def create_db_table(self, count_of_columns):
-        """Create specified table in database"""
+    def create_db_table(self, table_name, count_of_rows, columns_names):
+        """Create specified table in database with using faker"""
         pass
 
     @abstractmethod
