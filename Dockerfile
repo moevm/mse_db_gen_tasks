@@ -1,9 +1,7 @@
 # our base image
 FROM python:3.8
 
-RUN DEBIAN_FRONTEND="noninteractive"
-
-RUN apt-get -y update && apt-get -y upgrade
+ARG DEBIAN_FRONTEND="noninteractive"
 
 COPY ./src ./src
 
