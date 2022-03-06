@@ -4,6 +4,7 @@ import sqlite3
 
 
 class DbGen(IDbGen):
+    """Class database generator"""
     def __init__(self, db_file_name):
         self.conn = None
         self.db_gen = pydbgen.pydb()
