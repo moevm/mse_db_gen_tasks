@@ -6,4 +6,4 @@ RUN apt-get -y update && apt-get -y upgrade
 
 COPY ./src ./src
 
-RUN ["python3", "./src/app.py"]
+RUN ["python3", "./src/init.py"]
