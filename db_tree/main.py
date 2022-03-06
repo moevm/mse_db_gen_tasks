@@ -1,5 +1,6 @@
 class Node:
-    def __init__(self, data=None):
+    def __init__(self, weight, data=None):
+        self.weight = weight
         self.data = data
         self.childs = []
 
