@@ -4,6 +4,7 @@ import sqlite3
 
 class DbGen:
     """Class database generator"""
+
     def __init__(self, db_file_name):
         self.conn = None
         self.db_gen = pydbgen.pydb()
@@ -27,5 +28,18 @@ class DbGen:
         self.conn.commit()
 
     def describe_db(self):
-        self.conn = sqlite3.connect(self.db_file)
-
+        """
+        Method for describing database
+        """
+        with self.conn:
+            self.conn = sqlite3.connect(self.db_file)
+            c = self.conn.cursor()
+            c.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
+            meta_data = c.fetchall()
+            table_names = [i[0][0] for i in meta_data]
+            for j in table_names:
+                c.execute(f"PRAGMA table_info({j})")
+                data = c.fetchall()
+                print(f"Таблица {j} включает в себя следующие столбцы:")
+                for d in data:
+                    print(f"\t{d[0] + 1}. Столбец {d[1]} типа {d[2]}")
