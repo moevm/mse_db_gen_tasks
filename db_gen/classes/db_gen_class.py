@@ -16,13 +16,7 @@ class DbGen(IDbGen):
     def add_row_to(self, table_name, values):
         self.conn = sqlite3.connect(self.db_file)
         c = self.conn.cursor()
-        val = ''
-        j = 0
-        for i in values:
-            val += "'" + i + "'"
-            if j != len(values) - 1:
-                val += ', '
-            j += 1
+        val = "'" + "', '".join(values) + "'"
         print(val)
         c.execute(f"INSERT INTO {table_name} VALUES ({val})")
         self.conn.commit()
@@ -32,3 +26,7 @@ class DbGen(IDbGen):
 
     def save_db_to_file(self):
         self.conn.commit()
+
+    def describe_db(self):
+        self.conn = sqlite3.connect(self.db_file)
+
