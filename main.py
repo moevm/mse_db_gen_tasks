@@ -1,4 +1,4 @@
-from db_gen.classes.db_gen_class import DbGen
+from db_gen.db_gen_class import DbGen
 
 
 def main():

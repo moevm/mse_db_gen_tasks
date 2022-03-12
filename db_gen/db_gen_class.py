@@ -1,9 +1,8 @@
-from db_gen.interfaces.db_gen_interface import IDbGen
 from pydbgen import pydbgen
 import sqlite3
 
 
-class DbGen(IDbGen):
+class DbGen:
     """Class database generator"""
     def __init__(self, db_file_name):
         self.conn = None

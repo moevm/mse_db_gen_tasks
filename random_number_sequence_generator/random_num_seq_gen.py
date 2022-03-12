@@ -1,10 +1,9 @@
 import sys
 import random
 from datetime import datetime
-from random_number_sequence_generator.interfaces.random_num_seq_gen_interface import IRandomNumberSequenceGenerator
 
 
-class RandomNumberSequenceGenerator(IRandomNumberSequenceGenerator):
+class RandomNumberSequenceGenerator:
     """
     Class of random number sequence generator
     """
