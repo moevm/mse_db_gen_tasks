@@ -29,6 +29,9 @@ class DbGen(IDbGen):
         self.conn.commit()
 
     def describe_db(self):
+        """
+        Method for describing database
+        """
         with self.conn:
             self.conn = sqlite3.connect(self.db_file)
             c = self.conn.cursor()
