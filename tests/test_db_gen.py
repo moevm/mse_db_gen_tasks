@@ -6,17 +6,17 @@ from db_gen.db_gen_class import DbGen
 
 
 class TestDbGen(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.gen = DbGen("test_db_file.db")
-        cls.rows = random.randrange(3, 10, 1)
-        cls.all_columns = ['name', 'street_address', 'city', 'state', 'zipcode', 'country', 'company', 'job_title',
-                           'phone', 'ssn', 'email', 'year', 'weekday', 'date', 'time', 'license_plate']
-        cls.columns = random.sample(population=cls.all_columns, k=random.randrange(2, len(cls.all_columns)))
 
-    def test_1_create_table(self):
+    def setUp(self):
+        self.gen = DbGen("test_db_file.db")
+        self.rows = random.randrange(3, 10, 1)
+        self.all_columns = ['name', 'street_address', 'city', 'state', 'zipcode', 'country', 'company', 'job_title',
+                            'phone', 'ssn', 'email', 'year', 'weekday', 'date', 'time', 'license_plate']
+        self.columns = random.sample(population=self.all_columns, k=random.randrange(2, len(self.all_columns)))
         self.gen.create_db_table('a', self.rows, self.columns)
         self.gen.conn = sqlite3.connect(self.gen.db_file)
+
+    def test_1_create_table(self):
         cur = self.gen.conn.cursor()
         cur.execute("select * from a")
         values = cur.fetchall()
