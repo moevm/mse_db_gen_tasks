@@ -17,11 +17,9 @@ class DbGen:
         self.conn = sqlite3.connect(self.db_file)
         c = self.conn.cursor()
         val = "'" + "', '".join(values) + "'"
-        print(val)
         c.execute(f"INSERT INTO {table_name} VALUES ({val})")
         self.conn.commit()
         c.execute(f"select * from {table_name}")
-        print(c.fetchall())
         self.save_db_to_file()
 
     def save_db_to_file(self):
