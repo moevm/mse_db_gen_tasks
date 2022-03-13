@@ -1,0 +1,16 @@
+{
+  "cinema": {
+    "name": "varchar" ,
+    "address": "varchar" ,
+    "hall": {
+      "name": "varchar",
+      "seats": "int",
+      "session": {
+        "time": "datetime"
+      }
+    }
+  },
+  "film": {
+    "name": "varchar"
+  }
+}
