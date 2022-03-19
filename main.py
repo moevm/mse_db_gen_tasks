@@ -1,13 +1,15 @@
-from db_gen.db_gen_class import DbGen
+import sqlite3
+from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 
 
-def main():
-    db_generator = DbGen("dataBaseFile.db")
-    db_generator.create_db_table("a", 5, ["name", "country"])
-    db_generator.create_db_table("b", 5, ['name', 'street_address', 'city', 'phone', 'email', 'year', 'date'])
-    db_generator.add_row_to("a", ["Boris", "Russia"])
-    db_generator.describe_db()
+class MainGenerator:
+    def __init__(self):
+        self.rand_gen = RandomNumberSequenceGenerator()
 
+    def generate_tree_with_random_seed(self):
+        self.rand_gen.init_with_random_seed()
+        # tree generator
 
-if __name__ == "__main__":
-    main()
+    def generate_tree(self, seed):
+        self.rand_gen.init_with_seed(seed)
+        # tree generator
