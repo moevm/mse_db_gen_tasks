@@ -2,7 +2,7 @@ import os.path
 import random
 import sqlite3
 import unittest
-from db_gen.db_gen_class import DbGen
+from db_gen.classes.db_gen_class import DbGen
 
 
 class TestDbGen(unittest.TestCase):

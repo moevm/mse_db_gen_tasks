@@ -1,12 +1,9 @@
-from db_gen.db_gen_class import DbGen
+from db_gen.classes.random_db_gen_class import RandomDBGen
+from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 
 
 def main():
-    db_generator = DbGen("dataBaseFile.db")
-    db_generator.create_db_table("a", 5, ["name", "country"])
-    db_generator.create_db_table("b", 5, ['name', 'street_address', 'city', 'phone', 'email', 'year', 'date'])
-    db_generator.add_row_to("a", ["Boris", "Russia"])
-    db_generator.describe_db()
+    pass
 
 
 if __name__ == "__main__":
