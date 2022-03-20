@@ -7,6 +7,19 @@
 ```
   docker run gr3pr1/mse
 ```
+## Запуск приложения (CLI):
+Запуск генератора со случайным зерном
+```commandline
+  python3 ./run_gen.py
+```
+Запуск генератора с заданным зерном
+```commandline
+  python3 ./run_gen.py [-s, --seed] SEED (число вместо SEED) 
+```
+Вывод подсказки
+```commandline
+  python3 ./run_gen.py [-h, --help]
+```
 
 ## Запуск Unit-тестов:
 Вызвать подсказку (-h необязательно)
