@@ -1,10 +1,15 @@
-from db_gen.classes.random_db_gen_class import RandomDBGen
+import sqlite3
 from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 
 
-def main():
-    pass
+class MainGenerator:
+    def __init__(self):
+        self.rand_gen = RandomNumberSequenceGenerator()
 
+    def generate_tree_with_random_seed(self):
+        self.rand_gen.init_with_random_seed()
+        # tree generator
 
-if __name__ == "__main__":
-    main()
+    def generate_tree(self, seed):
+        self.rand_gen.init_with_seed(seed)
+        # tree generator
