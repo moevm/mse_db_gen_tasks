@@ -16,6 +16,10 @@
 ```commandline
   python3 ./run_gen.py [-s, --seed] SEED (число вместо SEED) 
 ```
+Dump базы данных
+```commandline
+  python3 ./run_gen.py [-d, --dump]
+```
 Вывод подсказки
 ```commandline
   python3 ./run_gen.py [-h, --help]
