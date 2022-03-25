@@ -41,3 +41,11 @@ class DbGen:
                 print(f"Таблица {j} включает в себя следующие столбцы:")
                 for d in data:
                     print(f"\t{d[0] + 1}. Столбец {d[1]} типа {d[2]}")
+
+    def dump_db(self):
+        self.conn = sqlite3.connect(self.db_file)
+        l = ''
+        for line in self.conn.iterdump():
+            l += line + '\n'
+        with open('dump_file.txt', 'w') as dump_file:
+            dump_file.write(l)
