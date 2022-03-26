@@ -1,6 +1,4 @@
 import json
-from db_gen.classes import db_gen_class
-
 
 class Node:
     def __init__(self, name, weight=None, data=None, childs=None):
