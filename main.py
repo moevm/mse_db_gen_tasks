@@ -16,5 +16,5 @@ class MainGenerator:
         self.rand_gen.init_with_seed(seed)
         # tree generator
 
-    def dump_db(self):
-        self.db_gen.dump_db()
+    def dump_db(self, path):
+        self.db_gen.dump_db(path)
