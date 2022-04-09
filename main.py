@@ -1,6 +1,7 @@
 import sqlite3
 from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 from db_gen.classes.db_gen_class import DbGen
+from db_gen.classes.random_db_gen_class import RandomDBGen
 
 
 class MainGenerator:
@@ -14,7 +15,10 @@ class MainGenerator:
 
     def generate_tree(self, seed):
         self.rand_gen.init_with_seed(seed)
-        # tree generator
+        rdb = RandomDBGen(self.rand_gen)
+        rdb.return_tree()
+
+        self.db_gen.describe_db()
 
     def dump_db(self, path):
         self.db_gen.dump_db(path)

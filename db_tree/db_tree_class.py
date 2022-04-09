@@ -1,5 +1,6 @@
 import json
-from db_gen.db_gen_class import DbGen
+from db_gen.classes.db_gen_class import DbGen
+
 
 class Node:
     def __init__(self, name, weight=None, data=None, childs=None):
@@ -13,6 +14,7 @@ class Node:
 
     def addData(self, key, value):
         self.data[key] = value
+
 
 class Tree:
     def __init__(self):
@@ -35,7 +37,8 @@ class Tree:
             for item in child.data.items():
                 print(item[0] + " " + item[1])
 
-        db_generator.create_db_table(self.root.childs[-1].name, len(self.root.childs[-1].data), list(self.root.childs[-1].data.keys()))
+        db_generator.create_db_table(self.root.childs[-1].name, len(self.root.childs[-1].data),
+                                     list(self.root.childs[-1].data.keys()))
 
     def saveJSON(self, path):
         data = {}
@@ -46,7 +49,6 @@ class Tree:
             data[table.name] = childs
         with open(path, 'w') as outfile:
             json.dump(data, outfile)
-
 
     def research(self, indices):
         if len(indices) > 0:
