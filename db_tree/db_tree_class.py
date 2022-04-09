@@ -1,7 +1,6 @@
 import json
 from db_gen.classes.db_gen_class import DbGen
 
-
 class Node:
     def __init__(self, name, weight=None, data=None, childs=None):
         self.name = name
@@ -23,7 +22,7 @@ class Tree:
     def addNode(self, node):
         self.root.addNode(node)
 
-    def loadJSON(self, path, db_generator):
+    def loadJSON(self, path, db_generator=None):
         with open(path) as file:
             f = json.load(file)
 
