@@ -1,6 +1,6 @@
 from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 from db_tree.db_tree_class import Tree, Node
-
+from db_gen.classes.db_gen_class import DbGen
 faker_config = ['name', 'street_address', 'city', 'state', 'zipcode', 'country', 'company', 'job_title', 'phone', 'ssn',
                 'email', 'month', 'year', 'weekday', 'date', 'time', 'latitude', 'longitude', 'license_plate']
 
@@ -28,5 +28,5 @@ class RandomDBGen:
             for j in self.seq_list[x][0]:
                 new_node.addData(faker_config[j], 'varchar')
             self.tree.addNode(new_node)
-        return self.tree
-    # load to json
+        self.tree.saveJSON('db_tree.txt')
+        self.tree.loadJSON('db_tree.txt', DbGen('db_f.db'))
