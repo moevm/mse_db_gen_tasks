@@ -7,4 +7,4 @@ COPY . .
 
 RUN pip install -r ./requirements.txt
 
-CMD ["python3", "./run_gen.py"]
+ENTRYPOINT ["python3", "./main.py"]
