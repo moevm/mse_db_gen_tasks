@@ -13,15 +13,15 @@ pip install -r requirements.txt
 Данное приложение можно использовать в случае, если пользователю необходимо сгенерировать базу данных с случайными структурой и наполнением таблиц, а также последующим сохранением структуры базы данных в `.json` файл и генерацией дампа базы данных.
 ## Запуск Docker:
 ```
-docker build -t gr3pr1/builerBD .
+docker build -t gr3pr1/DBjobGenerator .
 ```
 ```
-docker run gr3pr1/builerBD
+docker run gr3pr1/DBjobGenerator
 ```
 ## Запуск приложения (CLI):
 * _Для того чтобы запустить приложение из docker-контейнера, в начале любой команды нужно ввести:_
 ```
-docker run gr3pr1/builerBD
+docker run gr3pr1/DBjobGenerator
 ```
 * _После этого одну из команд, указанных ниже_
 
