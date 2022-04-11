@@ -26,20 +26,30 @@ class DbGen:
         self.conn.commit()
 
     def describe_db(self):
-        """
-        Method for describing database
-        """
-        self.conn = sqlite3.connect(self.db_file)
-        c = self.conn.cursor()
-        c.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
-        meta_data = c.fetchall()
-        table_names = [i[0][0] for i in meta_data]
-        for j in table_names:
-            c.execute(f"PRAGMA table_info({j})")
-            data = c.fetchall()
-            print(f"Таблица {j} включает в себя следующие столбцы:")
-            for d in data:
-                print(f"\t{d[0] + 1}. Столбец {d[1]} типа {d[2]}")
+        with self.conn:
+            self.conn = sqlite3.connect(self.db_file)
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM sqlite_master;")
+            print(cursor.fetchall())
+
+            cursor.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
+            records = cursor.fetchall()
+            table_names = [record[0] for record in records]
+            for table_name in table_names:
+                cursor.execute(f"PRAGMA table_info({table_name})")
+                table_data = cursor.fetchall()
+                print("Таблица с названием ", table_name, " содержит в себе ", len(table_data), " столбца:")
+                for data in table_data:
+                    print(f"\t{data[0] + 1}. Столбец {data[1]} типа {data[2]}")
+                cursor.execute(f"SELECT * from {table_name};")
+                rows = cursor.fetchall()
+                print("Таблица имеет ", len(rows), " записей")
+                rows = cursor.execute("PRAGMA foreign_key_list({})".format(self.sql_identifier(table_name)))
+                print(rows.fetchall())
+
+
+    def sql_identifier(self, s):
+        return '"' + s.replace('"', '""') + '"'
 
     def dump_db(self, path='dump_file.txt'):
         self.conn = sqlite3.connect(self.db_file)
