@@ -1,4 +1,5 @@
 import unittest
+from sys import argv
 from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 
 
@@ -6,7 +7,11 @@ class TestRandomNumberSequenceGenerator(unittest.TestCase):
 
     def setUp(self):
         self.gen = RandomNumberSequenceGenerator()
-        self.gen.init_with_random_seed()
+        if len(argv) != 1:
+            script, seed = argv
+            self.gen.init_with_seed(seed)
+        else:
+            self.gen.init_with_random_seed()
 
     def test_numbers_is_int(self):
         numbers = [self.gen.next(), self.gen.next(), self.gen.next(), self.gen.next()]
