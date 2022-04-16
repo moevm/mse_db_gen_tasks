@@ -9,13 +9,12 @@ usage(){
     echo "  run_db_tests - Run tests of database"
     exit
 }
-
 run_all(){
   python3 -m unittest -v tests/test_*.py
 }
 
 run_static_all(){
-  python3 -m unittest -v tests/test_*.py 123
+  python3 -m unittest -v tests/test_*.py "$1"
 }
 
 run_seq_gen_tests(){
@@ -55,7 +54,7 @@ do
             exit 0
             ;;
         run_static_all)
-            run_static_all
+            run_static_all "$1"
             remove_file
             exit 0
             ;;

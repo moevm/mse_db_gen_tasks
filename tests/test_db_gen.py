@@ -10,7 +10,7 @@ class TestDbGen(unittest.TestCase):
 
     def setUp(self):
         if len(argv) != 1:
-            script, seed = argv
+            _, seed = argv
             random.seed(seed)
     
         self.gen = DbGen("test_db_file.db")
