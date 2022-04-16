@@ -23,10 +23,12 @@ class Tree:
         self.root.addNode(node)
 
     def loadJSON(self, path, db_generator=None):
+
+        print(path)
         with open(path) as file:
             f = json.load(file)
-
         for data in f:
+            print(data)
             self.root.addNode(Node(data))
             for item in f[data].items():
                 self.root.childs[-1].addData(item[0], item[1])

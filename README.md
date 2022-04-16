@@ -18,6 +18,13 @@ docker build -t gr3pr1/DBjobGenerator .
 ```
 docker run gr3pr1/DBjobGenerator
 ```
+
+## Запуск с помощью docker-compose
+Для того, чтобы запусить программу с помощью docker-compose сначала используйте команду `docker-compose build`, также следует создать папку `results`. После чего вы сможете использовать приложение с помощью следующей команды:
+```commandline
+docker-compose run --entrypoint="CMD" db_gen
+```
+Где CMD -- любая команда из перечня доступных, например: `python3 ./run_gen.py -s 123`. Реузльтаты выполнения команд будут созранены в папку `results`
 ## Запуск приложения (CLI):
 * _Для того чтобы запустить приложение из docker-контейнера, в начале любой команды нужно ввести:_
 ```

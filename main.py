@@ -7,7 +7,7 @@ from db_gen.classes.random_db_gen_class import RandomDBGen
 class MainGenerator:
     def __init__(self):
         self.rand_gen = RandomNumberSequenceGenerator()
-        self.db_gen = DbGen('db_f.db')
+        self.db_gen = DbGen('results/db_f.db')
 
     def generate_tree_with_random_seed(self):
         self.rand_gen.init_with_random_seed()
@@ -17,8 +17,6 @@ class MainGenerator:
         self.rand_gen.init_with_seed(seed)
         rdb = RandomDBGen(self.rand_gen)
         rdb.return_tree()
-
-        self.db_gen.describe_db()
 
     def dump_db(self, path):
         self.db_gen.dump_db(path)

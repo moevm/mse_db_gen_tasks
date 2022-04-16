@@ -1,0 +1,11 @@
+version: '3.0'
+
+services:
+  db_gen:
+    container_name: main
+    command: python3 ./run_gen.py -s 123
+    volumes:
+      - ./results:/src/results
+    build: .
+volumes:
+  results:
