@@ -13,15 +13,15 @@ pip install -r requirements.txt
 Данное приложение можно использовать в случае, если пользователю необходимо сгенерировать базу данных с случайными структурой и наполнением таблиц, а также последующим сохранением структуры базы данных в `.json` файл и генерацией дампа базы данных.
 ## Запуск Docker:
 ```
-docker build -t gr3pr1/DBjobGenerator .
+docker build -t gr3pr1/dbjobgenerator .
 ```
 ```
-docker run gr3pr1/DBjobGenerator
+docker run gr3pr1/dbjobgenerator 
 ```
 ## Запуск приложения (CLI):
 * _Для того чтобы запустить приложение из docker-контейнера, в начале любой команды нужно ввести:_
 ```
-docker run gr3pr1/DBjobGenerator
+docker run gr3pr1/dbjobgenerator
 ```
 * _После этого одну из команд, указанных ниже_
 
@@ -29,7 +29,7 @@ docker run gr3pr1/DBjobGenerator
    >В результате выполнения данной команды будет сгенерирован файл `db_tree.txt`, в котором будет представлена сгенерированная база в данных в формате `.json` файла, со структурой, которая представлена в файле `example.json`. При том генерация произойдет со случайным сидом.
 
 ```commandline
-python3 ./run_gen.py
+python3 ./run_gen.py 
 ```
 2. Запуск генератора с заданным зерном
    >Результат выполнения данной команды аналогичен результату выполнения команды, указанной выше, но в этом случае будет использован указанный сид для генерации таблицы.
@@ -57,15 +57,15 @@ bash tests.sh -h
 ```
 Запуск всех тестов 
 ```commandline
-bash tests.sh run_all
+bash tests.sh run_all [seed]|NULL
 ```
 Запуск тестов генератора последовательности случайных чисел
 ```commandline
-bash tests.sh run_seq_gen_tests
+bash tests.sh run_seq_gen_tests [seed]|NULL
 ```
 Запуск тестов генератора баз данных
 ```commandline
-bash tests.sh run_db_tests
+bash tests.sh run_db_tests [seed]|NULL
 ```
 
 ## Пример работы
