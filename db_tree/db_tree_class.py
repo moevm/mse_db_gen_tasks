@@ -1,19 +1,17 @@
 import json
-from db_gen.classes.db_gen_class import DbGen
 
 class Node:
-    def __init__(self, name, weight=None, data=None, childs=None):
+    def __init__(self, name, typename=None, childs=None):
         self.name = name
-        self.weight = weight
-        self.data = {}
-        self.childs = []
+        self.typename = typename
+        self.childs = {}
+        self.link = {}
 
     def addNode(self, node):
-        self.childs.append(node)
+        self.childs[node.name] = node
 
-    def addData(self, key, value):
-        self.data[key] = value
-
+    def setLink(self, link):
+        self.link = link
 
 class Tree:
     def __init__(self):
@@ -23,33 +21,41 @@ class Tree:
         self.root.addNode(node)
 
     def loadJSON(self, path, db_generator=None):
-
-        print(path)
         with open(path) as file:
             f = json.load(file)
+
         for data in f:
-            print(data)
+            values_str = ""
             self.root.addNode(Node(data))
-            for item in f[data].items():
-                self.root.childs[-1].addData(item[0], item[1])
+            if "fields" in f[data]:
+                for field in f[data]["fields"].items():
+                    self.root.childs[data].addNode(Node(field[0], field[1]))
+                    values_str += field[0] + " " + field[1] + ","
 
-        for child in self.root.childs:
-            print(child.name)
-            for item in child.data.items():
-                print(item[0] + " " + item[1])
+            if "foreign" in f[data]:
+                for key, item in f[data]["foreign"].items():
+                    self.root.childs[data].childs[key].setLink(item)
+                    values_str += f"foreign key ({key}) references {list(item.keys())[0]}({list(item.values())[0]}),"
 
-        db_generator.create_db_table(self.root.childs[-1].name, len(self.root.childs[-1].data),
-                                     list(self.root.childs[-1].data.keys()))
+            if db_generator:
+                db_generator.add_table(data, values_str[:-1])
+
+
+    def export_to_dict(self):
+        data = {}
+        for table in self.root.childs.values():
+            fields = {}
+            foreign = {}
+            for child in table.childs.values():
+                fields[child.name] = child.typename
+                if child.link:
+                    foreign[child.name] = child.link
+            data[table.name] = {"fields": fields, "foreign": foreign}
+        return data
 
     def saveJSON(self, path):
-        data = {}
-        for table in self.root.childs:
-            childs = {}
-            for child in table.data.keys():
-                childs[child] = table.data[child]
-            data[table.name] = childs
         with open(path, 'w') as outfile:
-            json.dump(data, outfile)
+            json.dump(self.export_to_dict(), outfile)
 
     def research(self, indices):
         if len(indices) > 0:
