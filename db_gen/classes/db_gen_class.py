@@ -10,6 +10,18 @@ class DbGen:
         self.db_gen = pydbgen.pydb()
         self.db_file = db_file_name
 
+    def add_column_to(self, table_name, row_name, row_type):
+        self.conn = sqlite3.connect(self.db_file)
+        cursor = self.conn.cursor()
+        cursor.execute(f"ALTER TABLE {table_name} ADD {row_name} {row_type};")
+        self.save_db_to_file()
+
+    def add_table(self, table_name, values_data):
+        self.conn = sqlite3.connect(self.db_file)
+        cursor = self.conn.cursor()
+        cursor.execute(f"CREATE TABLE {table_name}({values_data});")
+        self.save_db_to_file()
+
     def create_db_table(self, table_name, count_of_rows, column_names):
         self.db_gen.gen_table(db_file=self.db_file, table_name=table_name, fields=column_names, num=count_of_rows)
 
@@ -26,20 +38,29 @@ class DbGen:
         self.conn.commit()
 
     def describe_db(self):
-        """
-        Method for describing database
-        """
-        self.conn = sqlite3.connect(self.db_file)
-        c = self.conn.cursor()
-        c.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
-        meta_data = c.fetchall()
-        table_names = [i[0][0] for i in meta_data]
-        for j in table_names:
-            c.execute(f"PRAGMA table_info({j})")
-            data = c.fetchall()
-            print(f"Таблица {j} включает в себя следующие столбцы:")
-            for d in data:
-                print(f"\t{d[0] + 1}. Столбец {d[1]} типа {d[2]}")
+        with self.conn:
+            self.conn = sqlite3.connect(self.db_file)
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
+            records = cursor.fetchall()
+            table_names = [record[0] for record in records]
+            for table_name in table_names:
+                cursor.execute(f"PRAGMA table_info({table_name})")
+                table_data = cursor.fetchall()
+                print("Таблица с названием ", table_name, " содержит в себе ", len(table_data), " столбца:")
+                for data in table_data:
+                    print(f"\t{data[0] + 1}. Столбец {data[1]} типа {data[2]}")
+                cursor.execute(f"SELECT * from {table_name};")
+                rows = cursor.fetchall()
+                print("Таблица имеет ", len(rows), " записей")
+                cursor.execute("PRAGMA foreign_key_list({})".format(self.sql_identifier(table_name)))
+                rows = cursor.fetchall()
+                for row in rows:
+                    print(f"Таблицы {table_name} и {row[2]} связаны по столбцам {row[3]} таблицы {table_name} и {row[4]} таблицы {row[2]}")
+
+
+    def sql_identifier(self, s):
+        return '"' + s.replace('"', '""') + '"'
 
     def dump_db(self, path='dump_file.txt'):
         self.conn = sqlite3.connect(self.db_file)
