@@ -2,12 +2,17 @@ import os.path
 import random
 import sqlite3
 import unittest
+from sys import argv
 from db_gen.classes.db_gen_class import DbGen
 
 
 class TestDbGen(unittest.TestCase):
 
     def setUp(self):
+        if len(argv) != 1:
+            _, seed = argv
+            random.seed(seed)
+    
         self.gen = DbGen("test_db_file.db")
         self.rows = random.randrange(3, 10, 1)
         self.all_columns = ['name', 'street_address', 'city', 'state', 'zipcode', 'country', 'company', 'job_title',
