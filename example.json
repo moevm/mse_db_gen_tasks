@@ -1,10 +1,22 @@
 {
   "table1": {
-    "name": "varchar(50)",
-    "city": "varchar(50)"
+    "fields": {
+      "table1_id": "int auto_increment",
+      "name": "varchar(50)",
+      "city": "varchar(50)"
+    }
   },
   "table2": {
-    "name": "varchar(50)",
-    "city": "varchar(50)"
+    "fields": {
+      "table2_id": "int auto_increment",
+      "name": "varchar(50)",
+      "city": "varchar(50)",
+      "table1_id": "int"
+    },
+    "foreign": {
+      "table1_id": {
+        "table1": "table1_id"
+      }
+    }
   }
 }

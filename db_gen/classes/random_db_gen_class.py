@@ -28,5 +28,5 @@ class RandomDBGen:
             for j in self.seq_list[x][0]:
                 new_node.addData(faker_config[j], 'varchar')
             self.tree.addNode(new_node)
-        self.tree.saveJSON('db_tree.txt')
-        self.tree.loadJSON('db_tree.txt', DbGen('db_f.db'))
+        self.tree.saveJSON('results/db_tree.txt')
+        self.tree.loadJSON('results/db_tree.txt', DbGen('results/db_f.db'))
