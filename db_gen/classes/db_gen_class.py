@@ -10,6 +10,19 @@ class DbGen:
         self.db_gen = pydbgen.pydb()
         self.db_file = db_file_name
 
+    def add_column_to(self, table_name, row_name, row_type):
+        self.conn = sqlite3.connect(self.db_file)
+        cursor = self.conn.cursor()
+        cursor.execute(f"ALTER TABLE {table_name} ADD {row_name} {row_type};")
+        self.save_db_to_file()
+
+    def add_table(self, table_name, values_data):
+        self.conn = sqlite3.connect(self.db_file)
+        cursor = self.conn.cursor()
+        print(f"CREATE TABLE {table_name}({values_data});")
+        cursor.execute(f"CREATE TABLE {table_name}({values_data});")
+        self.save_db_to_file()
+
     def create_db_table(self, table_name, count_of_rows, column_names):
         self.db_gen.gen_table(db_file=self.db_file, table_name=table_name, fields=column_names, num=count_of_rows)
 
@@ -26,20 +39,29 @@ class DbGen:
         self.conn.commit()
 
     def describe_db(self):
-        """
-        Method for describing database
-        """
-        self.conn = sqlite3.connect(self.db_file)
-        c = self.conn.cursor()
-        c.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
-        meta_data = c.fetchall()
-        table_names = [i[0][0] for i in meta_data]
-        for j in table_names:
-            c.execute(f"PRAGMA table_info({j})")
-            data = c.fetchall()
-            print(f"Таблица {j} включает в себя следующие столбцы:")
-            for d in data:
-                print(f"\t{d[0] + 1}. Столбец {d[1]} типа {d[2]}")
+        with self.conn:
+            self.conn = sqlite3.connect(self.db_file)
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
+            records = cursor.fetchall()
+            table_names = [record[0] for record in records]
+            for table_name in table_names:
+                cursor.execute(f"PRAGMA table_info({table_name})")
+                table_data = cursor.fetchall()
+                print("Таблица с названием ", table_name, " содержит в себе ", len(table_data), " столбца:")
+                for data in table_data:
+                    print(f"\t{data[0] + 1}. Столбец {data[1]} типа {data[2]}")
+                cursor.execute(f"SELECT * from {table_name};")
+                rows = cursor.fetchall()
+                print("Таблица имеет ", len(rows), " записей")
+                cursor.execute("PRAGMA foreign_key_list({})".format(self.sql_identifier(table_name)))
+                rows = cursor.fetchall()
+                for row in rows:
+                    print(f"Таблицы {table_name} и {row[2]} связаны по столбцам {row[3]} таблицы {table_name} и {row[4]} таблицы {row[2]}")
+
+
+    def sql_identifier(self, s):
+        return '"' + s.replace('"', '""') + '"'
 
     def dump_db(self, path='dump_file.txt'):
         self.conn = sqlite3.connect(self.db_file)
@@ -48,3 +70,73 @@ class DbGen:
             l += line + '\n'
         with open(path, 'w') as dump_file:
             dump_file.write(l)
+
+    @staticmethod
+    def parse_query(query: str):
+        parsed_query = dict()
+        query_words = list(query.split(' '))
+        words_count = 0
+
+        def build_string():
+            query_string = ''
+            query_string += parsed_query['select']
+            query_string += ' '.join(parsed_query['asked_columns'])
+            query_string += ' ' + parsed_query['table_name']
+            query_string += '\n'
+            if 'where' in parsed_query:
+                query_string += 'по условию '
+                query_string += ' '.join(parsed_query['where']) + '\n'
+            if 'order_column' in parsed_query:
+                query_string += \
+                    'в порядке ' + \
+                    ('убывания ' if parsed_query['order'] == 'desc' else 'возростания ') + parsed_query['order_column']
+            return query_string
+
+        if query_words[0].lower() != 'select':
+            return 'Запрос должен содеражть select!'
+        else:
+            parsed_query[query_words[0].lower()] = 'создать выборку, содержащую '
+            words_count += 1
+        if query_words[words_count] == '*':
+            parsed_query['asked_columns'] = ['все столбцы ']
+            words_count += 1
+        else:
+            column = ''
+            columns = []
+            while column != 'from':
+                column = query_words[words_count].lower()
+                if column != 'from':
+                    columns.append(column)
+                    words_count += 1
+            parsed_query['asked_columns'] = columns
+        if query_words[words_count].lower() == 'from':
+            words_count += 1
+            parsed_query['table_name'] = f'из таблицы {query_words[words_count]}'
+            words_count += 1
+
+        if words_count == len(query_words):
+            return build_string()
+
+        if query_words[words_count].lower() == 'where':
+            c_word = ''
+            condition = []
+            while c_word != 'order':
+                if not words_count + 1 > len(query_words) - 1:
+                    c_word = query_words[words_count + 1].lower()
+                    words_count += 1
+                    if c_word != 'order':
+                        condition.append(c_word)
+                else:
+                    break
+            parsed_query['where'] = condition
+            # words_count += 1
+
+        if words_count == len(query_words) - 1:
+            return build_string()
+
+        if query_words[words_count].lower() == 'order':
+            words_count += 2
+            parsed_query['order_column'] = query_words[words_count].lower()
+            words_count += 1
+            parsed_query["order"] = query_words[words_count].lower()
+        return build_string()
