@@ -12,12 +12,14 @@ class dbQuery:
         self.cur.execute(query)
 
     def printQuery(self):
-        print(self.cur.fetchall())
+        if self.query is not None:
+            print(self.cur.fetchall())
 
     def saveQuery(self, path):
-        saveFile = open(path, "w+")
-        saveFile.write(self.query)
-        saveFile.close()
+        if self.query is not None:
+            saveFile = open(path, "w+")
+            saveFile.write(self.query)
+            saveFile.close()
 
 
 # q = dbQuery("D:\\УЧЕБА\\6 семестр\\Разработка ПО\\25.04-1.05\\mse_db_gen_tasks\\db_f.db")
