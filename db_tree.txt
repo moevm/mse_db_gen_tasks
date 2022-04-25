@@ -1,0 +1,1 @@
+{"longitude": {"longitude": "varchar", "street_address": "varchar"}, "name": {"name": "varchar", "month": "varchar", "company": "varchar", "time": "varchar"}, "month": {"month": "varchar", "weekday": "varchar"}, "street_address": {"street_address": "varchar", "country": "varchar", "job_title": "varchar"}}
