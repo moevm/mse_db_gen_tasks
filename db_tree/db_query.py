@@ -2,14 +2,6 @@ import sqlite3
 from prettytable import PrettyTable
 
 
-def get_col_names():
-    # this works beautifully given that you know the table name
-    conn = sqlite3.connect("t.db")
-    c = conn.cursor()
-    c.execute("select * from tablename")
-    return [member[0] for member in c.description]
-
-
 class dbQuery:
     def __init__(self, path):
         self.conn = sqlite3.connect(path)
