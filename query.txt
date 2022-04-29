@@ -1,1 +1,1 @@
-SELECT * FROM street_address;
+INSERT INTO longitude VALUES ("55,755831°, 37,617673°","2022","12:00PM") 
