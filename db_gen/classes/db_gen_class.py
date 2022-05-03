@@ -19,6 +19,7 @@ class DbGen:
     def add_table(self, table_name, values_data):
         self.conn = sqlite3.connect(self.db_file)
         cursor = self.conn.cursor()
+        print(f"CREATE TABLE {table_name}({values_data});")
         cursor.execute(f"CREATE TABLE {table_name}({values_data});")
         self.save_db_to_file()
 
@@ -69,3 +70,73 @@ class DbGen:
             l += line + '\n'
         with open(path, 'w') as dump_file:
             dump_file.write(l)
+
+    @staticmethod
+    def parse_query(query: str):
+        parsed_query = dict()
+        query_words = list(query.split(' '))
+        words_count = 0
+
+        def build_string():
+            query_string = ''
+            query_string += parsed_query['select']
+            query_string += ' '.join(parsed_query['asked_columns'])
+            query_string += ' ' + parsed_query['table_name']
+            query_string += '\n'
+            if 'where' in parsed_query:
+                query_string += 'по условию '
+                query_string += ' '.join(parsed_query['where']) + '\n'
+            if 'order_column' in parsed_query:
+                query_string += \
+                    'в порядке ' + \
+                    ('убывания ' if parsed_query['order'] == 'desc' else 'возростания ') + parsed_query['order_column']
+            return query_string
+
+        if query_words[0].lower() != 'select':
+            return 'Запрос должен содеражть select!'
+        else:
+            parsed_query[query_words[0].lower()] = 'создать выборку, содержащую '
+            words_count += 1
+        if query_words[words_count] == '*':
+            parsed_query['asked_columns'] = ['все столбцы ']
+            words_count += 1
+        else:
+            column = ''
+            columns = []
+            while column != 'from':
+                column = query_words[words_count].lower()
+                if column != 'from':
+                    columns.append(column)
+                    words_count += 1
+            parsed_query['asked_columns'] = columns
+        if query_words[words_count].lower() == 'from':
+            words_count += 1
+            parsed_query['table_name'] = f'из таблицы {query_words[words_count]}'
+            words_count += 1
+
+        if words_count == len(query_words):
+            return build_string()
+
+        if query_words[words_count].lower() == 'where':
+            c_word = ''
+            condition = []
+            while c_word != 'order':
+                if not words_count + 1 > len(query_words) - 1:
+                    c_word = query_words[words_count + 1].lower()
+                    words_count += 1
+                    if c_word != 'order':
+                        condition.append(c_word)
+                else:
+                    break
+            parsed_query['where'] = condition
+            # words_count += 1
+
+        if words_count == len(query_words) - 1:
+            return build_string()
+
+        if query_words[words_count].lower() == 'order':
+            words_count += 2
+            parsed_query['order_column'] = query_words[words_count].lower()
+            words_count += 1
+            parsed_query["order"] = query_words[words_count].lower()
+        return build_string()
