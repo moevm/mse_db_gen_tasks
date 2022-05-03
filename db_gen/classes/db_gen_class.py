@@ -19,7 +19,6 @@ class DbGen:
     def add_table(self, table_name, values_data):
         self.conn = sqlite3.connect(self.db_file)
         cursor = self.conn.cursor()
-        print(f"CREATE TABLE {table_name}({values_data});")
         cursor.execute(f"CREATE TABLE {table_name}({values_data});")
         self.save_db_to_file()
 

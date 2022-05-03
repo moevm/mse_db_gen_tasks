@@ -3,6 +3,9 @@ FROM python:3.8
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
+RUN mkdir /src
+RUN mkdir src/results
+
 WORKDIR /src
 
 COPY . .
