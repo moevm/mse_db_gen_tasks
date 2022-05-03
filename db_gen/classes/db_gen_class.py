@@ -5,9 +5,9 @@ import sqlite3
 class DbGen:
     """Class database generator"""
 
-    def __init__(self, db_file_name):
+    def __init__(self, db_file_name, seed=None):
         self.conn = None
-        self.db_gen = pydbgen.pydb()
+        self.db_gen = pydbgen.pydb(seed)
         self.db_file = db_file_name
 
     def add_column_to(self, table_name, row_name, row_type):
@@ -19,11 +19,14 @@ class DbGen:
     def add_table(self, table_name, values_data):
         self.conn = sqlite3.connect(self.db_file)
         cursor = self.conn.cursor()
+        print(f"CREATE TABLE {table_name}({values_data});")
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        a = cursor.fetchall()
         cursor.execute(f"CREATE TABLE {table_name}({values_data});")
         self.save_db_to_file()
 
-    def create_db_table(self, table_name, count_of_rows, column_names):
-        self.db_gen.gen_table(db_file=self.db_file, table_name=table_name, fields=column_names, num=count_of_rows)
+    def create_db_table(self, table_name, count_of_rows, column_names: list):
+        self.db_gen.gen_table(primarykey=column_names[0], db_file=self.db_file, table_name=table_name, fields=column_names, num=count_of_rows)
 
     def add_row_to(self, table_name, values):
         self.conn = sqlite3.connect(self.db_file)

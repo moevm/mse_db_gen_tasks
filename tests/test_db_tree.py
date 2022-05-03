@@ -13,8 +13,8 @@ class TestTree(unittest.TestCase):
             json.dump({"table1": {"name": "varchar(50)", "city": "varchar(50)"},
                        "table2": {"name": "varchar(50)", "city": "varchar(50)"}}, file)
 
-        self.tree.loadJSON('input_tmp.json')
-        self.tree.saveJSON('output_tmp.json')
+        self.tree.load_json('input_tmp.json')
+        self.tree.save_json('output_tmp.json')
 
         with open('input_tmp.json') as file:
             self.inputFile = json.load(file)
@@ -31,7 +31,7 @@ class TestTree(unittest.TestCase):
     def test_addNode(self):
         childs_tmp = ['table3', 'table4', 'table5']
         for child in childs_tmp:
-            self.tree.addNode(child)
+            self.tree.add_node(child)
             self.assertEqual(child, self.tree.root.childs[-1])
 
     def tearDown(self):
