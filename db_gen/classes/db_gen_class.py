@@ -1,5 +1,6 @@
 from pydbgen import pydbgen
 import sqlite3
+import random
 
 
 class DbGen:
@@ -61,21 +62,18 @@ class DbGen:
                 for row in rows:
                     print(f"Таблицы {table_name} и {row[2]} связаны по столбцам {row[3]} таблицы {table_name} и {row[4]} таблицы {row[2]}")
 
-
     def sql_identifier(self, s):
         return '"' + s.replace('"', '""') + '"'
 
-    def get_table_and_columns_by_index(self, index):
+    def get_random_table_with_columns(self, index):
         self.conn = sqlite3.connect(self.db_file)
         c = self.conn.cursor()
-        c.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
-        meta_data = c.fetchall()
-        table_names = [i[0][0] for i in meta_data]
-        c.execute("SELECT name FROM " + table_names[index] + " ORDER BY name;")
-        columns_meta_data = c.fetchall()
-        columns_names = [i[0][0] for i in columns_meta_data]
-        return table_names[index], columns_names
-
+        c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        table_names = c.fetchall()
+        table_name = random.choice(table_names)[0]
+        data = c.execute("SELECT * FROM " + table_name)
+        column_names = [i[0] for i in data.description]
+        return table_name, column_names
 
     def dump_db(self, path='dump_file.txt'):
         self.conn = sqlite3.connect(self.db_file)

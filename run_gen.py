@@ -27,9 +27,9 @@ def gen_with_seed(seed, dump):
 
 
 @click.command(name='gen_select_request')
-def gen_select_request(dump):
+def gen_select_request():
     main_gen = MainGenerator()
-    main_gen.test()
+    main_gen.generate_select_request()
 
 
 cli.add_command(gen_select_request)

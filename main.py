@@ -15,21 +15,16 @@ class MainGenerator:
         self.rand_gen.init_with_random_seed()
         rdb = RandomDBGen(self.rand_gen)
         rdb.return_tree()
-        self.db_gen.describe_db()
-        # tree generator
 
     def generate_tree(self, seed):
         self.rand_gen.init_with_seed(seed)
         rdb = RandomDBGen(self.rand_gen)
         rdb.return_tree()
-        self.test()
-        self.db_gen.describe_db()
 
-    def test(self):
-        table, columns = self.db_gen.get_table_and_columns_by_index(1)
+    def generate_select_request(self):
+        table, columns = self.db_gen.get_random_table_with_columns(1)
         a = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
-        print(a)
-
+        print(DbGen.parse_query(a))
 
     def dump_db(self, path):
         self.db_gen.dump_db(path)

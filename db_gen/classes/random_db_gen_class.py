@@ -14,7 +14,7 @@ faker_config = ['name', 'street_address', 'city', 'state', 'zipcode', 'country',
 
 
 class RandomDBGen:
-    def __init__(self, sequence: RandomNumberSequenceGenerator, tables_limit=10, columns_limit=5, rows_limit=20):
+    def __init__(self, sequence: RandomNumberSequenceGenerator, tables_limit=10, columns_limit=10, rows_limit=20):
         self.sequence = sequence
         self.seq_list = []
         self.tables_limit = tables_limit
