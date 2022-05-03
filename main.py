@@ -18,5 +18,6 @@ class MainGenerator:
         rdb = RandomDBGen(self.rand_gen)
         rdb.return_tree()
 
+
     def dump_db(self, path):
         self.db_gen.dump_db(path)
