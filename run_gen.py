@@ -26,6 +26,13 @@ def gen_with_seed(seed, dump):
         main_gen.dump_db(dump)
 
 
+@click.command(name='gen_select_request')
+def gen_select_request(dump):
+    main_gen = MainGenerator()
+    main_gen.test()
+
+
+cli.add_command(gen_select_request)
 cli.add_command(gen_with_random_seed)
 cli.add_command(gen_with_seed)
 

@@ -65,6 +65,18 @@ class DbGen:
     def sql_identifier(self, s):
         return '"' + s.replace('"', '""') + '"'
 
+    def get_table_and_columns_by_index(self, index):
+        self.conn = sqlite3.connect(self.db_file)
+        c = self.conn.cursor()
+        c.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
+        meta_data = c.fetchall()
+        table_names = [i[0][0] for i in meta_data]
+        c.execute("SELECT name FROM " + table_names[index] + " ORDER BY name;")
+        columns_meta_data = c.fetchall()
+        columns_names = [i[0][0] for i in columns_meta_data]
+        return table_names[index], columns_names
+
+
     def dump_db(self, path='dump_file.txt'):
         self.conn = sqlite3.connect(self.db_file)
         l = ''
