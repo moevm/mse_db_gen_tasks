@@ -1,1 +1,0 @@
-{"longitude": {"longitude": "varchar", "year": "varchar", "time": "varchar"}}
