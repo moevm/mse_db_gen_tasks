@@ -1,30 +1,40 @@
-import argparse
-import os
-import sys
 from main import MainGenerator
+import click
 
 
-def main():
-    cli_parser = argparse.ArgumentParser(prog='run_gen',
-                                         usage='%(prog)s [options]',
-                                         description='Database generator')
+@click.group()
+def cli():
+    pass
 
-    cli_parser.add_argument('-s', '--seed', action="store", type=int, help='set a seed for generator')
-    cli_parser.add_argument('-d', '--dump', action="store", type=str, help='dump database', default='dump_file.txt')
 
-    args = cli_parser.parse_args()
+@click.command(name='gen_with_random_seed')
+@click.option("--dump", default="nodump", type=str, help="dump database")
+def gen_with_random_seed(dump):
     main_gen = MainGenerator()
+    main_gen.generate_tree_with_random_seed()
+    if dump != "nodump":
+        main_gen.dump_db(dump)
 
-    if not len(sys.argv) > 1:
-        main_gen.generate_tree_with_random_seed()
-        sys.exit()
-    if args.seed:
-        main_gen.generate_tree(args.seed)
-        sys.exit()
-    if args.dump:
-        main_gen.dump_db(args.dump)
-        sys.exit()
 
+@click.command(name='gen_with_seed')
+@click.option("-s", "--seed", default=0, type=int, help="set a seed for generator")
+@click.option("-d", "--dump", default="nodump", type=str, help="dump database")
+def gen_with_seed(seed, dump):
+    main_gen = MainGenerator()
+    main_gen.generate_tree(seed)
+    if dump != "nodump":
+        main_gen.dump_db(dump)
+
+
+@click.command(name='gen_select_request')
+def gen_select_request():
+    main_gen = MainGenerator()
+    main_gen.generate_select_request()
+
+
+cli.add_command(gen_select_request)
+cli.add_command(gen_with_random_seed)
+cli.add_command(gen_with_seed)
 
 if __name__ == "__main__":
-    main()
+    cli()

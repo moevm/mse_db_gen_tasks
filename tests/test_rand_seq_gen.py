@@ -9,9 +9,9 @@ class TestRandomNumberSequenceGenerator(unittest.TestCase):
         self.gen = RandomNumberSequenceGenerator()
         if len(argv) != 1:
             _, seed = argv
-            self.gen.init_with_seed(seed)
+            init_with_seed(seed)
         else:
-            self.gen.init_with_random_seed()
+            init_with_random_seed()
 
     def test_numbers_is_int(self):
         numbers = [self.gen.next(), self.gen.next(), self.gen.next(), self.gen.next()]
@@ -32,16 +32,16 @@ class TestRandomNumberSequenceGenerator(unittest.TestCase):
         numbers = [self.gen.next(), self.gen.next(), self.gen.next(), self.gen.next()]
         for i in range(0, len(numbers)):
             with self.subTest(i=i):
-                self.gen.init_with_seed(numbers[i])
+                init_with_seed(numbers[i])
                 tmp = self.gen.next()
-                self.gen.init_with_seed(numbers[i])
+                init_with_seed(numbers[i])
                 self.assertEqual(tmp, self.gen.next())
 
     def test_different_seeds(self):
         # tests that nums in sequence with different seeds are not equal
-        self.gen.init_with_seed(21)
+        init_with_seed(21)
         tmp = self.gen.next()
-        self.gen.init_with_seed(300)
+        init_with_seed(300)
         self.assertNotEqual(tmp, self.gen.next())
 
 
