@@ -47,15 +47,15 @@ class Tree:
                     self.root.childs[data].childs[key].set_link(item)
                     values_str += f"foreign key ({key}) references {list(item.keys())[0]}({list(item.values())[0]}),"
 
-            print(values_str)
+            # print(values_str)
             if db_generator:
                 weight = f["data"][data]["weight"]
                 list_names = list(f["data"][data]["fields"])
                 if f["data"][data]["weight"] != 0:
-                    print(data)
+                    # print(data)
                     db_generator.create_db_table(data, f["data"][data]["weight"], list(f["data"][data]["fields"]))
                 else:
-                    print('AAAAAAA' + data)
+                    # print('AAAAAAA' + data)
                     db_generator.add_table(data, values_str[:-1])
 
     def export_to_dict(self):

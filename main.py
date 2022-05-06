@@ -23,8 +23,8 @@ class MainGenerator:
 
     def generate_select_request(self):
         table, columns = self.db_gen.get_random_table_with_columns(1)
-        a = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
-        print(DbGen.parse_query(a))
+        query = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
+        print(DbGen.parse_query(query))
 
     def dump_db(self, path):
         self.db_gen.dump_db(path)

@@ -20,7 +20,7 @@ class DbGen:
     def add_table(self, table_name, values_data):
         self.conn = sqlite3.connect(self.db_file)
         cursor = self.conn.cursor()
-        print(f"CREATE TABLE {table_name}({values_data});")
+        # print(f"CREATE TABLE {table_name}({values_data});")
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         a = cursor.fetchall()
         cursor.execute(f"CREATE TABLE {table_name}({values_data});")
