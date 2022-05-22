@@ -9,6 +9,7 @@ class SelectRequestGenerator:
     def generate_request(self, columns_list, table_name, include_sort=True):
         random_columns = list(set(random.choices(columns_list, k=random.randrange(1, len(columns_list)))))
         random_columns_str = ','.join(random_columns)
+
         columns_for_count = list(set(random.choices(random_columns, k=random.randrange(0, len(random_columns)+1))))
         columns_for_max = list(set(random.choices(random_columns, k=random.randrange(0, len(random_columns) + 1))))
         columns_for_min = list(set(random.choices(random_columns, k=random.randrange(0, len(random_columns) + 1))))

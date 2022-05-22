@@ -46,7 +46,10 @@ class RandomDBGen:
                 faker_config[self.seq_list[x][0][0]] + '_' + str(table_names[faker_config[self.seq_list[x][0][0]]])),
                             weight=self.seq_list[x][1])
             for j in self.seq_list[x][0]:
-                new_node.add_data(faker_config[j], 'varchar')
+                if faker_config[j] in ['year', 'time', 'date']:
+                    new_node.add_data(faker_config[j], 'int')
+                else:
+                    new_node.add_data(faker_config[j], 'varchar')
             self.tree.add_node(new_node)
         self.tree.save_json('results/db_tree.json')
         self.tree.load_json('results/db_tree.json', DbGen('results/db_f.db', self.sequence.seed))

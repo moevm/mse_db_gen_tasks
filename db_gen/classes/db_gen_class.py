@@ -65,7 +65,7 @@ class DbGen:
     def sql_identifier(self, s):
         return '"' + s.replace('"', '""') + '"'
 
-    def get_random_table_with_columns(self, index):
+    def get_random_table_with_columns(self):
         self.conn = sqlite3.connect(self.db_file)
         c = self.conn.cursor()
         c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")

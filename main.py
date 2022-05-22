@@ -22,7 +22,7 @@ class MainGenerator:
         rdb.return_tree()
 
     def generate_select_request(self):
-        table, columns = self.db_gen.get_random_table_with_columns(1)
+        table, columns = self.db_gen.get_random_table_with_columns()
         query = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
         print(query)
         print(DbGen.parse_query(query))
