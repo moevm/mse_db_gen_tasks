@@ -116,9 +116,3 @@ class dbQuery:
             saveFile = open(path, "w+")
             saveFile.write(self.query)
             saveFile.close()
-
-
-if __name__ == "__main__":
-    db_query = dbQuery("/home/EFFECT322/PycharmProjects/mse_db_gen_tasks/results/db_f.db")
-    db_query.printTables()
-    db_query.write_to('test.pdf')
