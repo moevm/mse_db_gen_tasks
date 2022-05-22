@@ -9,8 +9,9 @@ from db_gen.classes.db_gen_class import DbGen
 class TestDbGen(unittest.TestCase):
 
     def setUp(self):
-        if len(argv) != 1:
-            _, seed = argv
+        print(argv)
+        if type(argv[-1]) == int:
+            seed = argv[-1]
             random.seed(seed)
     
         self.gen = DbGen("test_db_file.db")

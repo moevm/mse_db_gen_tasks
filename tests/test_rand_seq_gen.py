@@ -7,9 +7,9 @@ class TestRandomNumberSequenceGenerator(unittest.TestCase):
 
     def setUp(self):
         self.gen = RandomNumberSequenceGenerator()
-        if len(argv) > 3:
-            print(argv[3])
-            seed = int(argv[3])
+        if type(argv[-1]) == int:
+            print(argv[-1])
+            seed = int(argv[-1])
             self.gen.init_with_seed(seed)
         else:
             self.gen.init_with_random_seed()
