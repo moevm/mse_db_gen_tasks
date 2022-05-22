@@ -18,8 +18,9 @@ run_all(){
 
 run_seq_gen_tests(){
   if [ "$1" ]; then
-      python3 -m python3 -m unittest -v tests/test_rand*.py "$1"
-      else python3 python3 -m unittest -v tests/test_rand*.py
+      echo "$1"
+      python3  -m unittest -v tests/test_rand*.py "$1"
+      else python3 -m unittest -v tests/test_rand*.py
   fi
   ls
   rm -f ./test_db_file.db
