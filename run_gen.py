@@ -26,6 +26,13 @@ def gen_with_seed(seed, dump):
         main_gen.dump_db(dump)
 
 
+@click.command(name='rel')
+@click.option("-s", "--seed", default=0, type=int, help="set a seed for generator")
+def gen_with_relations(seed):
+    main_gen = MainGenerator()
+    main_gen.generate_tree_with_relations(seed)
+
+
 @click.command(name='gen_select_request')
 def gen_select_request():
     main_gen = MainGenerator()
@@ -35,6 +42,7 @@ def gen_select_request():
 cli.add_command(gen_select_request)
 cli.add_command(gen_with_random_seed)
 cli.add_command(gen_with_seed)
+cli.add_command(gen_with_relations)
 
 if __name__ == "__main__":
     cli()

@@ -21,6 +21,12 @@ class MainGenerator:
         rdb = RandomDBGen(self.rand_gen)
         rdb.return_tree()
 
+    def generate_tree_with_relations(self, seed):
+        self.rand_gen.init_with_seed(seed)
+        rdb = RandomDBGen(self.rand_gen)
+        rdb.get_common_columns()
+
+
     def generate_select_request(self):
         table, columns = self.db_gen.get_random_table_with_columns()
         query = self.select_request_gen.generate_request(columns_list=columns, table_name=table)

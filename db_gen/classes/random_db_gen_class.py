@@ -1,3 +1,5 @@
+import json
+
 from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 from db_tree.db_tree_class import Tree, Node
 from db_gen.classes.db_gen_class import DbGen
@@ -53,3 +55,23 @@ class RandomDBGen:
             self.tree.add_node(new_node)
         self.tree.save_json('results/db_tree.json')
         self.tree.load_json('results/db_tree.json', DbGen('results/db_f.db', self.sequence.seed))
+
+    def get_common_columns(self):
+        self.return_tree()
+        with open('results/db_tree.json') as json_file:
+            data: dict = json.load(json_file)
+            sets = dict()
+            for i in data["data"].items():
+                local_set = set(i[1]["fields"].keys())
+                sets[i[0]] = local_set
+            key_list = sorted(sets.keys())
+            res_dict = dict()
+            for i, v in enumerate(key_list):
+                if i != len(key_list) - 1:
+                    local_intersections = list(sets[key_list[i]].intersection(sets[key_list[i + 1]]))
+                    for x in local_intersections:
+                        if x not in res_dict:
+                            res_dict[x] = [key_list[i], key_list[i + 1]]
+                        else:
+                            key_list[i] not in res_dict[x] and res_dict[x].append(key_list[i])
+                            res_dict[x].append(key_list[i + 1])
