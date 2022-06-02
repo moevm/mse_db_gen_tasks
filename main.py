@@ -1,13 +1,17 @@
+import json
 import sqlite3
 from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 from db_gen.classes.db_gen_class import DbGen
 from db_gen.classes.random_db_gen_class import RandomDBGen
 from select_request_generator.select_request_gen import SelectRequestGenerator
+import os
 
 
 class MainGenerator:
     def __init__(self):
         self.rand_gen = RandomNumberSequenceGenerator()
+        if os.path.exists("results/db_f.db"):
+            os.remove("results/db_f.db")
         self.db_gen = DbGen('results/db_f.db')
         self.select_request_gen = SelectRequestGenerator()
 
@@ -21,11 +25,33 @@ class MainGenerator:
         rdb = RandomDBGen(self.rand_gen)
         rdb.return_tree()
 
-    def generate_tree_with_relations(self, seed):
+    def generate_tree_one_to_one(self, seed):
         self.rand_gen.init_with_seed(seed)
         rdb = RandomDBGen(self.rand_gen)
         rdb.get_common_columns()
+        table_name = self.db_gen.create_one_to_one()
+        j = open('results/db_tree.json', 'r')
+        jo = json.load(j)
+        j.close()
+        jo['data'][table_name + '_related'] = {"id": "integer", "data": "varchar", "f_id": "integer"}
+        jo['data'][table_name]['foreign'] = {table_name + '_related': 'one_to_one'}
+        j = open('results/db_tree.json', 'w')
+        json.dump(jo, j)
+        j.close()
 
+    def generate_tree_one_to_many(self, seed):
+        self.rand_gen.init_with_seed(seed)
+        rdb = RandomDBGen(self.rand_gen)
+        rdb.get_common_columns()
+        table_name = self.db_gen.create_one_to_many()
+        j = open('results/db_tree.json', 'r')
+        jo = json.load(j)
+        j.close()
+        jo['data'][table_name + '_related'] = {"id": "integer", "data": "varchar", "f_id": "integer"}
+        jo['data'][table_name]['foreign'] = {table_name + '_related': "one_to_many"}
+        j = open('results/db_tree.json', 'w')
+        json.dump(jo, j)
+        j.close()
 
     def generate_select_request(self):
         table, columns = self.db_gen.get_random_table_with_columns()

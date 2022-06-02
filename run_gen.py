@@ -26,11 +26,18 @@ def gen_with_seed(seed, dump):
         main_gen.dump_db(dump)
 
 
-@click.command(name='rel')
+@click.command(name='rel_one_one')
 @click.option("-s", "--seed", default=0, type=int, help="set a seed for generator")
-def gen_with_relations(seed):
+def gen_with_rel_one_to_one(seed):
     main_gen = MainGenerator()
-    main_gen.generate_tree_with_relations(seed)
+    main_gen.generate_tree_one_to_one(seed)
+
+
+@click.command(name='rel_one_many')
+@click.option("-s", "--seed", default=0, type=int, help="set a seed for generator")
+def gen_with_rel_one_to_many(seed):
+    main_gen = MainGenerator()
+    main_gen.generate_tree_one_to_many(seed)
 
 
 @click.command(name='gen_select_request')
@@ -42,7 +49,8 @@ def gen_select_request():
 cli.add_command(gen_select_request)
 cli.add_command(gen_with_random_seed)
 cli.add_command(gen_with_seed)
-cli.add_command(gen_with_relations)
+cli.add_command(gen_with_rel_one_to_one)
+cli.add_command(gen_with_rel_one_to_many)
 
 if __name__ == "__main__":
     cli()
