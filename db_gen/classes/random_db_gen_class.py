@@ -1,4 +1,5 @@
 import json
+import os
 
 from random_number_sequence_generator.random_num_seq_gen import RandomNumberSequenceGenerator
 from db_tree.db_tree_class import Tree, Node
@@ -32,7 +33,7 @@ class RandomDBGen:
             table_list = flat_map_seq(next_num + 1)
             self.seq_list.append([table_list, self.sequence.next() % self.rows_limit])
 
-    def return_tree(self):
+    def return_tree(self, console=0):
         table_names = {}
         for x in range(1, len(self.seq_list)):
             if faker_config[self.seq_list[x][0][0]] not in table_names:
@@ -53,8 +54,11 @@ class RandomDBGen:
                 else:
                     new_node.add_data(faker_config[j], 'varchar')
             self.tree.add_node(new_node)
-        self.tree.save_json('results/db_tree.json')
-        self.tree.load_json('results/db_tree.json', DbGen('results/db_f.db', self.sequence.seed))
+        if not os.path.isdir("results"):
+            os.mkdir("results")
+        self.tree.save_json('results/db_tree.json', console)
+        if console == 0:
+            self.tree.load_json('results/db_tree.json', DbGen('results/db_f.db', self.sequence.seed))
 
     def get_common_columns(self):
         self.return_tree()

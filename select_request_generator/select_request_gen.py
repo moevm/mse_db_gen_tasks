@@ -35,3 +35,7 @@ class SelectRequestGenerator:
             request = request + " ORDER BY " + column_for_sort + " " + sort_dir
 
         return request
+
+    def save_request(self, query):
+        file = open("./results/query", "w")
+        file.write(query)

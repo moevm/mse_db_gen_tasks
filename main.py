@@ -15,15 +15,15 @@ class MainGenerator:
         self.db_gen = DbGen('results/db_f.db')
         self.select_request_gen = SelectRequestGenerator()
 
-    def generate_tree_with_random_seed(self):
+    def generate_tree_with_random_seed(self, console):
         self.rand_gen.init_with_random_seed()
         rdb = RandomDBGen(self.rand_gen)
-        rdb.return_tree()
+        rdb.return_tree(console)
 
-    def generate_tree(self, seed):
+    def generate_tree(self, seed, console):
         self.rand_gen.init_with_seed(seed)
         rdb = RandomDBGen(self.rand_gen)
-        rdb.return_tree()
+        rdb.return_tree(console)
 
     def generate_tree_one_to_one(self, seed):
         self.rand_gen.init_with_seed(seed)
@@ -53,11 +53,14 @@ class MainGenerator:
         json.dump(jo, j)
         j.close()
 
-    def generate_select_request(self):
+    def generate_select_request(self, console):
         table, columns = self.db_gen.get_random_table_with_columns()
         query = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
-        print(query)
-        print(DbGen.parse_query(query))
+        if console == 0:
+            self.select_request_gen.save_request(query)
+        else:
+            print(query)
+        # print(DbGen.parse_query(query))
 
     def dump_db(self, path):
         self.db_gen.dump_db(path)

@@ -71,9 +71,12 @@ class Tree:
         data = {"data": data_base, "seed": self.seed}
         return data
 
-    def save_json(self, path):
-        with open(path, 'w') as outfile:
-            json.dump(self.export_to_dict(), outfile)
+    def save_json(self, path, console):
+        if console == 0:
+            with open(path, 'w') as outfile:
+                json.dump(self.export_to_dict(), outfile)
+        else:
+            print(self.export_to_dict())
 
     def research(self, indices):
         if len(indices) > 0:
