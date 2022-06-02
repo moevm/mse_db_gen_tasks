@@ -42,6 +42,13 @@ def gen_with_rel_one_to_many(seed):
     main_gen.generate_tree_one_to_many(seed)
 
 
+@click.command(name='rel_many_many')
+@click.option("-s", "--seed", default=0, type=int, help="set a seed for generator")
+def gen_with_rel_one_to_many(seed):
+    main_gen = MainGenerator()
+    main_gen.generate_tree_many_to_many(seed)
+
+
 @click.command(name='gen_select_request')
 @click.option("-c", "--console", default=0, type=int, help="print in console")
 def gen_select_request(console):

@@ -53,6 +53,24 @@ class MainGenerator:
         json.dump(jo, j)
         j.close()
 
+    def generate_tree_many_to_many(self, seed):
+        self.rand_gen.init_with_seed(seed)
+        rdb = RandomDBGen(self.rand_gen)
+        rdb.get_common_columns()
+        table_names = self.db_gen.create_many_to_many()
+        j = open('results/db_tree.json', 'r')
+        jo = json.load(j)
+        j.close()
+        jo['data'][table_names[0][0] + '_' + table_names[1][0] + '_related'] =\
+            {"id": "integer", "data": "varchar", "f_id_1": "integer", "f_id_2": "integer"}
+        jo['data'][table_names[0][0]]['foreign'] = {table_names[0][0] + '_'
+                                                    + table_names[1][0] + '_related': "many_to_many"}
+        jo['data'][table_names[1][0]]['foreign'] = {table_names[0][0] + '_'
+                                                    + table_names[1][0] + '_related': "many_to_many"}
+        j = open('results/db_tree.json', 'w')
+        json.dump(jo, j)
+        j.close()
+
     def generate_select_request(self, console):
         table, columns = self.db_gen.get_random_table_with_columns()
         query = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
