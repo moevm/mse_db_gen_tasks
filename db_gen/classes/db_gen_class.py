@@ -1,3 +1,5 @@
+import uuid
+
 from pydbgen import pydbgen
 import sqlite3
 import random
@@ -156,3 +158,34 @@ class DbGen:
             words_count += 1
             parsed_query["order"] = query_words[words_count].lower()
         return build_string()
+
+    def create_one_to_one(self):
+        with self.conn:
+            self.conn = sqlite3.connect(self.db_file)
+            # add id column to random existing table
+            c = self.conn.cursor()
+            c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+            table_names = c.fetchall()
+            table_name = random.choice(table_names)[0]
+            c.execute(f"alter table {table_name} add column id integer primary key")
+            rows_count = c.execute(f"select count(*) from {table_name}").fetchone()[0]
+            # create related table
+            c.execute(f"create table {table_name}_related (integer id primary key, varchar data, integer f_id, foreign key(f_id) references {table_name}(id))")
+            for i in range(rows_count):
+                c.execute(f"insert into {table_name}_related values({uuid.uuid4()}, {i})")
+
+    def create_one_to_many(self):
+        with self.conn:
+            self.conn = sqlite3.connect(self.db_file)
+            # add id column to random existing table
+            c = self.conn.cursor()
+            c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+            table_names = c.fetchall()
+            table_name = random.choice(table_names)[0]
+            c.execute(f"alter table {table_name} add column id integer primary key")
+            rows_count = c.execute(f"select count(*) from {table_name}").fetchone()[0]
+            # create related table
+            c.execute(
+                f"create table {table_name}_related (integer id primary key, varchar data, integer f_id, foreign key(f_id) references {table_name}(id))")
+            for i in range(rows_count):
+                c.execute(f"insert into {table_name}_related values({uuid.uuid4()}, {random.randint(0, i)})")
