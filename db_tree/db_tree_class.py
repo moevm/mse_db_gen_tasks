@@ -1,4 +1,5 @@
 import json
+import sqlite3
 
 from db_gen.classes.db_gen_class import DbGen
 
@@ -26,6 +27,7 @@ class Tree:
     def __init__(self, seed=None):
         self.root = Node('root')
         self.seed = seed
+        self.conn = None
 
     def add_node(self, node):
         self.root.add_node(node)
@@ -36,9 +38,12 @@ class Tree:
 
         for data in f["data"]:
             values_str = ""
+            int_fields_names = []
             self.root.add_node(Node(data))
             if "fields" in f["data"][data]:
                 for field in f["data"][data]["fields"].items():
+                    if field[1] == 'int':
+                        int_fields_names.append(field[0])
                     self.root.childs[data].add_node(Node(name=field[0], typename=field[1], weight=f["data"][data]["weight"]))
                     values_str += field[0] + " " + field[1] + ","
 

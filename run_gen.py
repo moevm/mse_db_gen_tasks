@@ -34,9 +34,11 @@ def gen_with_relations(seed):
 
 
 @click.command(name='gen_select_request')
-def gen_select_request():
+@click.option("-w", default=False, help="add WHERE")
+@click.option("-o", default=False, help="add ORDER BY")
+def gen_select_request(w, o):
     main_gen = MainGenerator()
-    main_gen.generate_select_request()
+    main_gen.generate_select_request(w,o)
 
 
 cli.add_command(gen_select_request)

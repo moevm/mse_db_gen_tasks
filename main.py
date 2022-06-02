@@ -9,7 +9,7 @@ class MainGenerator:
     def __init__(self):
         self.rand_gen = RandomNumberSequenceGenerator()
         self.db_gen = DbGen('results/db_f.db')
-        self.select_request_gen = SelectRequestGenerator()
+        self.select_request_gen = SelectRequestGenerator(self.db_gen)
 
     def generate_tree_with_random_seed(self):
         self.rand_gen.init_with_random_seed()
@@ -26,10 +26,9 @@ class MainGenerator:
         rdb = RandomDBGen(self.rand_gen)
         rdb.get_common_columns()
 
-
-    def generate_select_request(self):
+    def generate_select_request(self, w,o):
         table, columns = self.db_gen.get_random_table_with_columns()
-        query = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
+        query = self.select_request_gen.generate_request(columns_list=columns, table_name=table, include_sort=o, include_where=w)
         print(query)
         print(DbGen.parse_query(query))
 
