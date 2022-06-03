@@ -29,7 +29,8 @@ class DbGen:
         self.save_db_to_file()
 
     def create_db_table(self, table_name, count_of_rows, column_names: list):
-        self.db_gen.gen_table(primarykey=column_names[0], db_file=self.db_file, table_name=table_name, fields=column_names, num=count_of_rows)
+        self.db_gen.gen_table(primarykey=column_names[0], db_file=self.db_file, table_name=table_name,
+                              fields=column_names, num=count_of_rows)
 
     def add_row_to(self, table_name, values):
         self.conn = sqlite3.connect(self.db_file)
@@ -62,7 +63,8 @@ class DbGen:
                 cursor.execute("PRAGMA foreign_key_list({})".format(self.sql_identifier(table_name)))
                 rows = cursor.fetchall()
                 for row in rows:
-                    print(f"Таблицы {table_name} и {row[2]} связаны по столбцам {row[3]} таблицы {table_name} и {row[4]} таблицы {row[2]}")
+                    print(
+                        f"Таблицы {table_name} и {row[2]} связаны по столбцам {row[3]} таблицы {table_name} и {row[4]} таблицы {row[2]}")
 
     def sql_identifier(self, s):
         return '"' + s.replace('"', '""') + '"'
@@ -155,33 +157,75 @@ class DbGen:
             parsed_query["order"] = query_words[words_count].lower()
         return build_string()
 
+    def set_ids(self, c, table_name):
+        data = c.execute(f"select * from {table_name}")
+        column = data.description[0][0]
+        rows = data.fetchall()
+        i = 0
+        for row in rows:
+            c.execute(f"update {table_name} set id = {i} where {column} = '{row[0]}'").fetchall()
+            i += 1
+
     def create_one_to_one(self):
-        with self.conn:
-            self.conn = sqlite3.connect(self.db_file)
-            # add id column to random existing table
-            c = self.conn.cursor()
-            c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
-            table_names = c.fetchall()
-            table_name = random.choice(table_names)[0]
-            c.execute(f"alter table {table_name} add column id integer primary key")
-            rows_count = c.execute(f"select count(*) from {table_name}").fetchone()[0]
-            # create related table
-            c.execute(f"create table {table_name}_related (integer id primary key, varchar data, integer f_id, foreign key(f_id) references {table_name}(id))")
-            for i in range(rows_count):
-                c.execute(f"insert into {table_name}_related values({uuid.uuid4()}, {i})")
+        self.conn = sqlite3.connect(self.db_file)
+        # add id column to random existing table
+        c = self.conn.cursor()
+        c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        table_names = c.fetchall()
+        table_name = random.choice(table_names)[0]
+        c.execute(f"alter table {table_name} add column id integer auto_increment").fetchall()
+        self.set_ids(c, table_name)
+        rows_count = c.execute(f"select count(*) from {table_name}").fetchone()[0]
+        c.execute(
+            f"create table {table_name}_related (id integer auto_increment primary key,"
+            f" data varchar, f_id integer, foreign key(f_id) references {table_name}(id))").fetchone()
+        # create related table
+        for i in range(rows_count):
+            c.execute(f"insert into {table_name}_related values({i}, '{uuid.uuid4()}', {i})").fetchall()
+        self.conn.commit()
+        return table_name
 
     def create_one_to_many(self):
-        with self.conn:
-            self.conn = sqlite3.connect(self.db_file)
-            # add id column to random existing table
-            c = self.conn.cursor()
-            c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
-            table_names = c.fetchall()
-            table_name = random.choice(table_names)[0]
-            c.execute(f"alter table {table_name} add column id integer primary key")
-            rows_count = c.execute(f"select count(*) from {table_name}").fetchone()[0]
-            # create related table
-            c.execute(
-                f"create table {table_name}_related (integer id primary key, varchar data, integer f_id, foreign key(f_id) references {table_name}(id))")
-            for i in range(rows_count):
-                c.execute(f"insert into {table_name}_related values({uuid.uuid4()}, {random.randint(0, i)})")
+        self.conn = sqlite3.connect(self.db_file)
+        # add id column to random existing table
+        c = self.conn.cursor()
+        c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        table_names = c.fetchall()
+        table_name = random.choice(table_names)[0]
+        c.execute(f"alter table {table_name} add column id integer auto_increment")
+        self.set_ids(c, table_name)
+        rows_count = c.execute(f"select count(*) from {table_name}").fetchone()[0]
+        # create related table
+        c.execute(
+            f"create table {table_name}_related (id integer auto_increment primary key,"
+            f" data varchar, f_id integer, foreign key(f_id) references {table_name}(id))")
+        for i in range(rows_count):
+            c.execute(f"insert into {table_name}_related values({i}, '{uuid.uuid4()}', {random.randint(0, i)})")
+        self.conn.commit()
+        return table_name
+
+    def create_many_to_many(self):
+        self.conn = sqlite3.connect(self.db_file)
+        # add id column to random existing table
+        c = self.conn.cursor()
+        c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        table_names = c.fetchall()
+        table_names = random.choices(table_names, k=2)
+        t1 = table_names[0][0]
+        t2 = table_names[1][0]
+        c.execute(f"alter table {t1} add column id integer auto_increment")
+        c.execute(f"alter table {t2} add column id integer auto_increment")
+        self.set_ids(c, t1)
+        self.set_ids(c, t2)
+        rows_count_1 = c.execute(f"select count(*) from {t1}").fetchone()[0]
+        rows_count_2 = c.execute(f"select count(*) from {t2}").fetchone()[0]
+        c.execute(
+            f"create table {t1 + '_' + t2}_related (id integer auto_increment primary key,"
+            f" data varchar, f_id_1 integer, f_id_2 integer, foreign key(f_id_1) references {t1}(id),"
+            f" foreign key(f_id_2) references {t2}(id))")
+        for i in range(min(rows_count_1, rows_count_2)):
+            c.execute(f"insert into {t1 + '_' + t2}_related values({i}, '{uuid.uuid4()}', {random.randint(0, i)}, "
+                      f"{random.randint(0, i)})")
+        self.conn.commit()
+        return table_names
+

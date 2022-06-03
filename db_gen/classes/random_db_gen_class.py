@@ -62,7 +62,7 @@ class RandomDBGen:
 
     def get_common_columns(self):
         self.return_tree()
-        with open('/results/db_tree.json') as json_file:
+        with open('results/db_tree.json') as json_file:
             data: dict = json.load(json_file)
             sets = dict()
             for i in data["data"].items():
