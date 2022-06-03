@@ -31,7 +31,7 @@ python3 ./run_gen.py gen_with_random_seed [-d, --dump]  PATH (path - строк�
 ```
 3. Генерация запроса
 ```commandline
-python3 ./run_gen.py gen_select_request
+python3 ./run_gen.py gen_select_request [-w] True/False [-o] True/False (default - False)
 ```
 4. Вывод подсказки
    >В результате выполнения данной команды будет выведена подсказка.

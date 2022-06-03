@@ -13,7 +13,7 @@ class MainGenerator:
         if os.path.exists("results/db_f.db"):
             os.remove("results/db_f.db")
         self.db_gen = DbGen('results/db_f.db')
-        self.select_request_gen = SelectRequestGenerator()
+        self.select_request_gen = SelectRequestGenerator(self.db_gen)
 
     def generate_tree_with_random_seed(self, console):
         self.rand_gen.init_with_random_seed()
@@ -71,14 +71,14 @@ class MainGenerator:
         json.dump(jo, j)
         j.close()
 
-    def generate_select_request(self, console):
+    def generate_select_request(self, w, o, console):
         table, columns = self.db_gen.get_random_table_with_columns()
         query = self.select_request_gen.generate_request(columns_list=columns, table_name=table)
         if console == 0:
             self.select_request_gen.save_request(query)
         else:
             print(query)
-        # print(DbGen.parse_query(query))
+            print(DbGen.parse_query(query))
 
     def dump_db(self, path):
         self.db_gen.dump_db(path)

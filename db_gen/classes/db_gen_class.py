@@ -72,12 +72,16 @@ class DbGen:
     def get_random_table_with_columns(self):
         self.conn = sqlite3.connect(self.db_file)
         c = self.conn.cursor()
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        c.execute("SELECT name, sql FROM sqlite_master WHERE type='table' ORDER BY name;")
         table_names = c.fetchall()
-        table_name = random.choice(table_names)[0]
-        data = c.execute("SELECT * FROM " + table_name)
-        column_names = [i[0] for i in data.description]
-        return table_name, column_names
+        table = random.choice(table_names)
+        data = c.execute("SELECT * FROM " + table[0])
+        erase_name = len(table[0])+14
+        table_info = table[1][erase_name:-1].split(', ')
+        columns = []
+        for column in table_info:
+            columns.append(column.split(' '))
+        return table[0], columns
 
     def dump_db(self, path='dump_file.txt'):
         self.conn = sqlite3.connect(self.db_file)

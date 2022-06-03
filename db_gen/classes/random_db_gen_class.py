@@ -49,8 +49,10 @@ class RandomDBGen:
                 faker_config[self.seq_list[x][0][0]] + '_' + str(table_names[faker_config[self.seq_list[x][0][0]]])),
                             weight=self.seq_list[x][1])
             for j in self.seq_list[x][0]:
-                if faker_config[j] in ['year', 'time', 'date']:
+                if faker_config[j] in ['year']:
                     new_node.add_data(faker_config[j], 'int')
+                elif faker_config[j] in ['time', 'date']:
+                    new_node.add_data(faker_config[j], 'date')
                 else:
                     new_node.add_data(faker_config[j], 'varchar')
             self.tree.add_node(new_node)

@@ -50,10 +50,12 @@ def gen_with_rel_one_to_many(seed):
 
 
 @click.command(name='gen_select_request')
+@click.option("-w", default=False, help="add WHERE")
+@click.option("-o", default=False, help="add ORDER BY")
 @click.option("-c", "--console", default=0, type=int, help="print in console")
-def gen_select_request(console):
+def gen_select_request(w, o, console):
     main_gen = MainGenerator()
-    main_gen.generate_select_request(console)
+    main_gen.generate_select_request(w, o, console)
 
 
 cli.add_command(gen_select_request)
