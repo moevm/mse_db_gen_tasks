@@ -4,3 +4,4 @@ pandas~=1.4.1
 click~=8.1.2
 prettytable~=3.2.0
 uuid==1.30
+fpdf~=1.7.2

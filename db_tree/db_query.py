@@ -72,8 +72,9 @@ class dbQuery:
 
         return header, rows, col_widths
 
-    def write_to(self, path):
-        pdf = FPDF()
+    def write_to_pdf(self, path, pdf=None):
+        if pdf is None:
+            pdf = FPDF()
         font_size = 8
         pdf.set_font(family="Arial")
         pdf.set_font_size(size=font_size)
