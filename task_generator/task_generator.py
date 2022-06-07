@@ -22,7 +22,3 @@ class TaskGenerator:
             pdf.set_font('DejaVu', '', 8)
             pdf.multi_cell(0, 5, txt=DbGen.parse_query(query))
             self.db_query.write_to_pdf(pdf=pdf, path=pdf_path)
-
-if __name__ == "__main__":
-    gen = TaskGenerator()
-    gen.generate_task(pdf_path='../results/task.pdf')
